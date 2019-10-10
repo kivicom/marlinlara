@@ -17,7 +17,7 @@ class AdminController extends Controller
 
     public function index()
     {
-        $comments = $this->comments->orderBy('created_at', 'desc')->paginate(3);
+        $comments = $this->comments->list(1,'created_at', 'desc', 5);
         return view('admin.admin', ['comments' => $comments]);
     }
 

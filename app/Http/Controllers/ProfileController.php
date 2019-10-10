@@ -32,9 +32,10 @@ class ProfileController extends Controller
         $this->validator($request->all())->validate();
         $input = $request->except(['_token','image']);
         $this->image->update(Auth::id(), $request->file('image'));
-        User::where('id', Auth::id())->update($input);
+        if(!User::where('id', Auth::id())->update($input)){
+            Session::flash('profile', 'Ошибка обновления, попробуйте еще раз!');
+        }
         Session::flash('profile', 'Профиль успешно обновлен!');
-
         return redirect('/profile');
     }
 

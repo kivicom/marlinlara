@@ -5,6 +5,7 @@ namespace App;
 use Hamcrest\Thingy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Comment extends Model
 {
@@ -22,6 +23,21 @@ class Comment extends Model
         '_token',
     ];
 
+    public static function store($request)
+    {
+        return Comment::create([
+            'user_id' => Auth::id(),
+            'name' => $request['name'],
+            'text' => $request['text'],
+            'date' => now(),
+        ]);
+    }
+
+    public function list($status, $orderBy, $order, $perPage)
+    {
+        return Comment::where('published',$status)->orderBy($orderBy, $order)->paginate($perPage);
+    }
+
     public function adminManageComment($published, $id_comment, Request $request)
     {
         if ($request->has('published')) {
@@ -35,7 +51,6 @@ class Comment extends Model
 
     public function adminCommentUpdate($published, $id_comment)
     {
-        //dd($published,$id_comment);
         return Comment::where('id', $id_comment)->update(['published' => $published]);
     }
 

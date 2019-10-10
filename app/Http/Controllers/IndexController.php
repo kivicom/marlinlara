@@ -16,7 +16,7 @@ class IndexController extends Controller
 
     public function index()
     {
-        $comments = $this->comments->where('published',1)->orderBy('created_at', 'desc')->paginate(3);
+        $comments = $this->comments->list(1,'created_at', 'desc', 5);
         return view('index', ['comments' => $comments]);
     }
 }
